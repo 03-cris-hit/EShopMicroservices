@@ -4,8 +4,23 @@ namespace Catalog.API.Products.UpdateProduct
 
     public record UpdateProductCommand(Guid Id,string Name, List<string> Category, string Description, string ImageFile, decimal Price)
      : ICommand<UpdateProductResult>;
-
     public record UpdateProductResult(bool IsSuccess);
+
+    public class UpdateProductCommandValidator : AbstractValidator<UpdateProductCommand> {
+
+        public UpdateProductCommandValidator() {
+
+            RuleFor(command => command.Id).NotEmpty().WithMessage("ProductoId is requiered");
+            RuleFor(command => command.Name)
+                .NotEmpty().WithMessage("Name is requiered")
+                .Length(2, 150).WithMessage("Name must be between 2 and 15' characters");
+
+            RuleFor(command => command.Price)
+                .GreaterThan(0).WithMessage("Price must be greater than 0");
+
+        }
+    }
+
     public class UpdateProductoCommandHandler(IDocumentSession session, ILogger<UpdateProductoCommandHandler> logger)
         : ICommandHandler<UpdateProductCommand, UpdateProductResult>
     {
@@ -16,7 +31,7 @@ namespace Catalog.API.Products.UpdateProduct
             var product = await session.LoadAsync<Product>(command.Id, cancellationToken);
             if (product is null) 
             {
-                throw new ProductNotFoundException();
+                throw new ProductNotFoundException(command.Id);
             }
             product.Name = command.Name;
             product.Category = command.Category;
