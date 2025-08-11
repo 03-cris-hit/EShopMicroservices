@@ -11,7 +11,7 @@ service DiscountProtoSevice{
 	rpc DeleteDiscount(DeleteDiscountRequest) returns (DeleteDiscountResponse);
 }
 message GetDiscountRequest{
-	string productoName = 1;
+	string productName = 1;
 }
 
 message CouponModel{

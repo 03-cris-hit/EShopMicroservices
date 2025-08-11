@@ -12,7 +12,7 @@ public class DiscountService(DiscountContext dbContext, ILogger<DiscountService>
     public override async Task<CouponModel> GetDiscount(GetDiscountRequest request, ServerCallContext context)
     {
 
-        var coupon = await dbContext.Coupons.FirstOrDefaultAsync(x=>x.ProductName == request.ProductoName);
+        var coupon = await dbContext.Coupons.FirstOrDefaultAsync(x=>x.ProductName == request.ProductName);
         if (coupon is null)
             coupon = new Coupon { ProductName="No Coupon", Amount=0,Description="No Coupon" };
 
