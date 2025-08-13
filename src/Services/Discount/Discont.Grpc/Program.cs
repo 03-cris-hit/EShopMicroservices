@@ -16,11 +16,11 @@ builder.Services.AddDbContext<DiscountContext>(opts => {
 var app = builder.Build();
 app.UseMigration();
 app.MapGrpcService<DiscountService>();
-
-if (app.Environment.IsDevelopment())
-{
-    app.MapGrpcReflectionService();     // 👈 necesario
-}
+app.MapGrpcReflectionService();
+//if (app.Environment.IsDevelopment())
+//{
+//    app.MapGrpcReflectionService();     // 👈 necesario
+//}
 
 
 

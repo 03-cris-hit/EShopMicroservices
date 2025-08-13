@@ -11,14 +11,22 @@ public class DiscountService(DiscountContext dbContext, ILogger<DiscountService>
 {
     public override async Task<CouponModel> GetDiscount(GetDiscountRequest request, ServerCallContext context)
     {
+        try
+        {
 
-        var coupon = await dbContext.Coupons.FirstOrDefaultAsync(x=>x.ProductName == request.ProductName);
-        if (coupon is null)
-            coupon = new Coupon { ProductName="No Coupon", Amount=0,Description="No Coupon" };
+            var coupon = await dbContext.Coupons.FirstOrDefaultAsync(x => x.ProductName == request.ProductName);
+            if (coupon is null)
+                coupon = new Coupon { ProductName = "No Coupon", Amount = 0, Description = "No Coupon" };
 
-        logger.LogInformation("GetDiscount {ProductName}", coupon.ProductName);
-        var couponModel = coupon.Adapt<CouponModel>();
-        return couponModel;
+            logger.LogInformation("GetDiscount {ProductName}", coupon.ProductName);
+            var couponModel = coupon.Adapt<CouponModel>();
+            return couponModel;
+        }
+        catch (Exception e) {
+            logger.LogError("LogError {ProductName}", e.Message);
+
+            return null;
+        }
     }
 
     public override async Task<CouponModel> CreateDiscount(CreateDiscountRequest request, ServerCallContext context)
