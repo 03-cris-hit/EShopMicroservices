@@ -27,6 +27,19 @@ builder.Services.AddStackExchangeRedisCache(options => {
     options.Configuration = builder.Configuration.GetConnectionString("Redis");
 });
 
+builder.Services.AddGrpcClient<DiscountProtoSevice.DiscountProtoSeviceClient>(options =>
+{
+    options.Address = new Uri(builder.Configuration["GrpcSetting:DiscountUrl"]!);
+})
+    .ConfigurePrimaryHttpMessageHandler(() =>
+    {
+        var handler = new HttpClientHandler
+        {
+            ServerCertificateCustomValidationCallback =
+                HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+        };
+        return handler;
+    });
 
 
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
